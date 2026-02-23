@@ -1,11 +1,12 @@
 """Main FastAPI application entry point."""
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.config import settings
 from src.db.database import init_db
-from src.api.routes import doctor_routes, lead_routes
+from src.api.routes import lead_routes
 
 
 @asynccontextmanager
@@ -17,14 +18,12 @@ async def lifespan(app: FastAPI):
     # Shutdown (cleanup if needed)
 
 
-# Create FastAPI app
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
     lifespan=lifespan
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
@@ -33,8 +32,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(doctor_routes.router, prefix=settings.API_V1_PREFIX)
 app.include_router(lead_routes.router, prefix=settings.API_V1_PREFIX)
 
 

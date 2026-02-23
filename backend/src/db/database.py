@@ -2,6 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
 from src.core.config import settings
 
 
@@ -28,5 +29,8 @@ def get_db():
 
 
 def init_db():
-    """Initialize database tables."""
-    Base.metadata.create_all(bind=engine)
+    """Initialize database connection (schema managed externally)."""
+    # For managed databases like Supabase, schema and migrations
+    # are handled outside the application. This function exists
+    # to keep a consistent startup hook but does not apply DDL.
+    return

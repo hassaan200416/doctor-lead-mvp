@@ -1,4 +1,7 @@
-"""Services package."""
-from . import doctor_service, lead_service
+"""Services package.
 
-__all__ = ["doctor_service", "lead_service"]
+Avoid importing submodules at package import time to prevent unnecessary
+side-effects (e.g., requiring optional dependencies for unrelated scripts).
+"""
+
+__all__ = []
