@@ -83,48 +83,6 @@ def get_lead_by_npi(db: Session, npi: str) -> Optional[Lead]:
     return db.query(Lead).filter(Lead.npi == npi).first()
 
 
-def search_by_specialty(
-    db: Session, specialty_code: str, limit: int = 100, offset: int = 0
-) -> List[Lead]:
-    """Search leads by taxonomy specialty code."""
-    return (
-        db.query(Lead)
-        .filter(Lead.specialty == specialty_code)
-        .order_by(Lead.created_at.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
-
-
-def search_by_state(
-    db: Session, state: str, limit: int = 100, offset: int = 0
-) -> List[Lead]:
-    """Search leads by state."""
-    return (
-        db.query(Lead)
-        .filter(Lead.state == state)
-        .order_by(Lead.created_at.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
-
-
-def _search_by_state_and_specialty(
-    db: Session, state: str, specialty_code: str, limit: int = 100, offset: int = 0
-) -> List[Lead]:
-    """Internal helper: search by both state and specialty."""
-    return (
-        db.query(Lead)
-        .filter(Lead.state == state, Lead.specialty == specialty_code)
-        .order_by(Lead.created_at.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
-
-
 def create_lead(db: Session, lead: LeadCreate) -> Lead:
     """Create a new lead."""
     db_lead = Lead(**lead.model_dump())
