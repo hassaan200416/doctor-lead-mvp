@@ -1,13 +1,18 @@
 """Application configuration settings."""
+from pathlib import Path
 from pydantic_settings import BaseSettings
-from typing import Optional
+
+
+# Get the path to the backend directory (3 levels up from this file)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+ENV_FILE = BASE_DIR / ".env"
 
 
 class Settings(BaseSettings):
     """Application settings management."""
     
-    # Database
-    DATABASE_URL: str = "sqlite:///./doctor_leads.db"
+    # Database - REQUIRED from .env file
+    DATABASE_URL: str
     
     # API
     API_V1_PREFIX: str = "/api/v1"
@@ -22,7 +27,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     class Config:
-        env_file = ".env"
+        env_file = str(ENV_FILE)
         case_sensitive = True
 
 
