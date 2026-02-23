@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "your-secret-key-change-this-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    API_KEY: str | None = None
+
+    # External APIs
+    ABSTRACT_EMAIL_API_KEY: str | None = None
     
     class Config:
         env_file = str(ENV_FILE)

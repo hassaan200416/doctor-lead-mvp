@@ -1,6 +1,6 @@
 """Lead schemas for request/response validation."""
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -40,3 +40,12 @@ class LeadResponse(LeadBase):
 
     class Config:
         from_attributes = True
+
+
+class LeadListResponse(BaseModel):
+    """Paginated list of leads."""
+
+    total: int
+    limit: int
+    offset: int
+    data: List[LeadResponse]
