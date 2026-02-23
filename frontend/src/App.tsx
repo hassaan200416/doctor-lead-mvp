@@ -1,35 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { useEffect, useState } from 'react';
+import { LeadsPage } from './pages/LeadsPage';
+import { LoginPage } from './pages/LoginPage';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [apiKey, setApiKey] = useState<string | null>(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  useEffect(() => {
+    const stored = localStorage.getItem('apiKey');
+    if (stored) {
+      setApiKey(stored);
+    }
+  }, []);
+
+  if (!apiKey) {
+    return <LoginPage onLogin={setApiKey} />;
+  }
+
+  return <LeadsPage />;
 }
 
-export default App
+export default App;
+
+

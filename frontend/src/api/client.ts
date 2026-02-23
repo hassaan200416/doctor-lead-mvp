@@ -1,9 +1,6 @@
-/**
- * API client configuration for backend communication
- */
-import axios, { type AxiosError, type InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -13,32 +10,26 @@ export const apiClient = axios.create({
   timeout: 10000,
 });
 
-// Request interceptor
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // Add auth token if available
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const apiKey = localStorage.getItem('apiKey');
+  if (apiKey) {
+    // eslint-disable-next-line no-param-reassign
+    config.headers['X-API-Key'] = apiKey;
   }
-);
+  return config;
+});
 
-// Response interceptor
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem('auth_token');
-      window.location.href = '/login';
+      // Clear invalid key and force user back to login
+      localStorage.removeItem('apiKey');
+      localStorage.setItem('apiKeyError', 'Invalid API key. Please try again.');
+      window.location.reload();
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;
